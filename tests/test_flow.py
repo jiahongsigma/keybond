@@ -57,6 +57,7 @@ class Flow(unittest.TestCase):
         self.assertIn("0 0 1 2 3 4", out, "leading zeros kept")
         self.assertEqual(out.count("then Enter"), 1, "code shown once, not per key")
         self.assertIn("●●●●●●", out)
+        self.assertNotIn("old-style", out, "no caution for a modern pairing")
         dev = world["devices"][DEV]
         self.assertTrue(dev["Paired"] and dev["Trusted"] and dev["Connected"], dev)
         self.assertEqual(world["pair_calls"], 1)
@@ -67,6 +68,10 @@ class Flow(unittest.TestCase):
         self.assertEqual(rc, 0, out)
         self.assertIn("5 8 3 7 4 7", out)
         self.assertTrue(world["devices"][DEV]["Trusted"])
+        self.assertIn("old-style PIN pairing", out)
+        self.assertIn("a place you trust", out)
+        self.assertLess(out.index("old-style PIN pairing"), out.index("5 8 3 7 4 7"),
+                        "the caution comes before the code, while there is time to stop")
 
     def test_pin_requested_from_us(self):
         rc, out, world = self.play("request-pin")
@@ -191,6 +196,16 @@ class Flow(unittest.TestCase):
         self.assertIn("Fake Keyboard (AA:BB:CC:00:00:01): not connected", out)
         self.assertIn("Other Keyboard (AA:BB:CC:00:00:02): not connected", out)
         self.assertIn("keybond fix", out)
+
+    def test_status_and_fix_caution_about_old_style_keyboards(self):
+        rc, out, world = self.play("passkey", "status", preset="paired,legacy")
+        self.assertIn("Old-style PIN pairing: Fake Keyboard", out)
+        rc, out, world = self.play("passkey", "fix --wait 6", preset="paired,legacy",
+                                   connect="silent")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("If you do pair it again: this keyboard uses old-style", out)
+        rc, out, world = self.play("passkey", "status", preset="paired")
+        self.assertNotIn("ld-style", out)
 
     def test_status_with_nothing_paired(self):
         rc, out, world = self.play("passkey", "status")

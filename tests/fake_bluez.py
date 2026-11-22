@@ -170,6 +170,8 @@ class Device(dbus.service.Object):
             "Address": address, "Alias": name or address.replace(":", "-"), "Icon": icon,
             "Paired": dbus.Boolean(False), "Trusted": dbus.Boolean(False),
             "Connected": dbus.Boolean(False), "RSSI": dbus.Int16(-55),
+            "LegacyPairing": dbus.Boolean(SCENARIO in ("legacy", "request-pin")
+                                          or "legacy" in PRESET),
         }, signature="sv")
         if name:
             self.props["Name"] = name

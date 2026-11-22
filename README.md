@@ -265,6 +265,17 @@ device being paired is really yours.
 - While it runs, keybond refuses pairing requests about any other device.
 - Names sent by devices are stripped of control characters before they are shown.
 
+**Can someone nearby read what I type?** Once paired, the link is encrypted. The weak
+moment is the pairing itself. Older keyboards use PIN pairing, where someone recording the
+radio nearby during those few seconds can later work out the key and read the keystrokes.
+Newer keyboards (passkey pairing, recent Bluetooth Low Energy) do not have this weakness.
+
+keybond tells you when a keyboard uses old-style PIN pairing, before it shows the code,
+and `keybond status` marks such keyboards. For those, pair at home or somewhere you trust,
+not in a shared or public place; using the keyboard elsewhere afterwards is fine. keybond
+does not change how the link is encrypted: that is between the keyboard and the Bluetooth
+service.
+
 </details>
 
 <details>

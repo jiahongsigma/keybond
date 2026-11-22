@@ -125,6 +125,11 @@ class Paired(unittest.TestCase):
         self.assertEqual(bkp.find_by_address(devices, "AA:BB:CC:DD:EE:03"), C)
         self.assertIsNone(bkp.find_by_address(devices, "AA:BB:CC:DD:EE:99"))
 
+    def test_legacy_note_only_for_old_style_keyboards(self):
+        self.assertIn("place you trust", bkp.legacy_note({"LegacyPairing": True}))
+        self.assertIsNone(bkp.legacy_note({"LegacyPairing": False}))
+        self.assertIsNone(bkp.legacy_note({}))
+
     def test_state_words(self):
         self.assertEqual(bkp.state_words({"Connected": True, "Trusted": True}), "connected")
         words = bkp.state_words({"Connected": False, "Trusted": False, "Blocked": True})

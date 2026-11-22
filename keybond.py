@@ -33,7 +33,7 @@ SETTLE_SECONDS = 4    # with no address given, wait this long for a second keybo
 RETRY_SECONDS = 5
 PAIR_TIMEOUT = 120
 
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 
 # Failures that only mean "the keyboard is not answering right now".
 UNREACHABLE = {"ConnectionAttemptFailed", "UnknownObject", "InProgress", "NotReady"}
@@ -257,6 +257,16 @@ def connect_verdict(error_name, message=""):
     return "unknown"
 
 
+LEGACY_NOTE = ("This keyboard uses old-style PIN pairing. Someone recording the radio nearby "
+               "while you pair could later read what you type, so pair it in a place you "
+               "trust, not a shared or public one.")
+
+
+def legacy_note(props):
+    """A caution for keyboards whose pairing can be captured, or None."""
+    return LEGACY_NOTE if props.get("LegacyPairing") else None
+
+
 def state_words(props):
     """How a paired keyboard is doing, in a few words."""
     words = ["connected" if props.get("Connected") else "not connected"]
@@ -452,6 +462,12 @@ def run_status(adapter_name, fancy, colour):
     if any(not devices[p].get("Connected") for p in paired):
         ui.hint("Not connected is normal for a keyboard that is asleep, off or away.")
         ui.hint("If one will not come back:  keybond fix <address>")
+    old_style = [describe(devices[p]) for p in paired if legacy_note(devices[p])]
+    if old_style:
+        ui.say()
+        ui.warn("Old-style PIN pairing: " + ", ".join(old_style) + ".")
+        ui.hint("Pairing these can be captured by someone recording the radio nearby.")
+        ui.hint("Pair them again only in a place you trust, not a shared or public one.")
     return EXIT_OK
 
 
@@ -629,6 +645,9 @@ def run_fix(target, adapter_name, wait, log_path, fancy, colour):
         ui.hint("Is it connected to another computer, phone or tablet right now?")
         ui.hint("Is it within a couple of metres?")
         ui.hint(f"If none of that helps, pair it afresh:  {again}")
+    if legacy_note(props):
+        ui.say()
+        ui.warn("If you do pair it again: " + LEGACY_NOTE[0].lower() + LEGACY_NOTE[1:])
     ui.say()
     return done(EXIT_PAIR_FAILED)
 
@@ -810,6 +829,9 @@ def run(target, adapter_name, timeout, log_path, fancy, colour, again=False):
         state.update(pairing=path, quiet=quiet, proved=False, shown=None, started=True)
         if not quiet:
             ui.ok(f"Found {describe(state['devices'][path])}")
+            caution = legacy_note(state["devices"][path])
+            if caution:
+                ui.warn(caution)
             ui.say("  Pairing… keep the keyboard in pairing mode.")
         note(f"Pair() on {path} quiet={quiet}")
 
