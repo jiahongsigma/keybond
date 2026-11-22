@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "keybond"
+dynamic = ["version"]
+description = "Pair a Bluetooth keyboard on Linux from a terminal; the pairing code stays on screen until you have typed it"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "Jiahong Dai" }]
+keywords = ["bluetooth", "keyboard", "pairing", "bluez", "linux", "passkey"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Topic :: System :: Hardware",
+    "Topic :: Utilities",
+]
+# No install-time dependencies on purpose. keybond needs the D-Bus bindings
+# (dbus-python, PyGObject), but pip builds those from source and that fails
+# without C headers. Distributions ship them ready-made (python3-dbus,
+# python3-gi), so they are expected from the system; keybond says how to
+# install them if they are missing.
+dependencies = []
+
+[project.optional-dependencies]
+# For systems with no packaged bindings; needs a compiler and the D-Bus/GLib headers.
+bindings = ["dbus-python", "PyGObject"]
+
+[project.scripts]
+keybond = "keybond:main"
+
+[project.urls]
+Homepage = "https://github.com/jiahongsigma/keybond"
+Issues = "https://github.com/jiahongsigma/keybond/issues"
+
+[tool.setuptools]
+py-modules = ["keybond"]
+
+[tool.setuptools.dynamic]
+version = { attr = "keybond.__version__" }

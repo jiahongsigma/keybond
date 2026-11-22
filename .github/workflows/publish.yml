@@ -1,0 +1,52 @@
+name: publish
+
+# Uploads to PyPI when a GitHub release is published. Nothing happens until
+# both of these exist:
+#   1. on PyPI, a "trusted publisher" for project `keybond` naming this
+#      repository, the workflow `publish.yml`, and the environment `pypi`;
+#   2. a GitHub release whose tag matches __version__ in keybond.py.
+# No API token is stored anywhere: PyPI trusts this workflow directly.
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: System D-Bus bindings and a private bus
+        run: sudo apt-get update && sudo apt-get install -y python3-dbus python3-gi python3-venv dbus dbus-daemon
+      - name: Tests
+        run: /usr/bin/python3 -m unittest discover -s tests
+      - name: The release tag matches the version in keybond.py
+        run: |
+          version=$(/usr/bin/python3 -c "import keybond; print(keybond.__version__)")
+          test "${GITHUB_REF_NAME#v}" = "$version" || { echo "tag $GITHUB_REF_NAME is not version $version"; exit 1; }
+      - name: Build
+        run: |
+          /usr/bin/python3 -m venv /tmp/build-venv
+          /tmp/build-venv/bin/pip install --quiet build twine
+          /tmp/build-venv/bin/python -m build
+          /tmp/build-venv/bin/twine check --strict dist/*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  pypi:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1

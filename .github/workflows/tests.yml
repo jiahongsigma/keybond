@@ -1,0 +1,31 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: System D-Bus bindings and a private bus
+        run: sudo apt-get update && sudo apt-get install -y python3-dbus python3-gi python3-venv dbus dbus-daemon
+      - name: Unit tests and end-to-end runs against the stand-in Bluetooth service
+        run: /usr/bin/python3 -m unittest discover -s tests -v
+      - name: The package builds and its metadata is valid
+        run: |
+          /usr/bin/python3 -m venv /tmp/build-venv
+          /tmp/build-venv/bin/pip install --quiet build twine
+          /tmp/build-venv/bin/python -m build
+          /tmp/build-venv/bin/twine check --strict dist/*
+      - name: The built wheel installs and runs as a command
+        run: |
+          /usr/bin/python3 -m venv --system-site-packages /tmp/run-venv
+          /tmp/run-venv/bin/pip install --quiet dist/*.whl
+          /tmp/run-venv/bin/keybond --version
+          /tmp/run-venv/bin/keybond --help > /dev/null
