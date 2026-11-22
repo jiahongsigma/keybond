@@ -1,0 +1,77 @@
+name: Device report
+description: Tell us how keybond did with your keyboard, whether it worked or not
+title: "Report: <keyboard model> on <distribution>"
+labels: ["device report"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you. Every report adds a row to the list of verified combinations in the README, and a report of a failure is as useful as a success.
+  - type: input
+    id: keyboard
+    attributes:
+      label: Keyboard
+      description: Maker and model.
+      placeholder: Logitech MX Keys
+    validations:
+      required: true
+  - type: dropdown
+    id: bluetooth
+    attributes:
+      label: Bluetooth type
+      description: If unsure, pick "Don't know". The log tells us.
+      options:
+        - Bluetooth Low Energy (BLE)
+        - Classic Bluetooth
+        - Don't know
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: Distribution and desktop
+      placeholder: Fedora 41, GNOME
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: keybond and BlueZ versions
+      description: "`keybond --version` and `bluetoothctl --version`"
+      placeholder: keybond 0.4.0, BlueZ 5.72
+    validations:
+      required: true
+  - type: checkboxes
+    id: tried
+    attributes:
+      label: What you tried
+      options:
+        - label: "`keybond` (pairing)"
+        - label: "`keybond --again` (pairing afresh)"
+        - label: "`keybond status`"
+        - label: "`keybond fix`"
+        - label: The keyboard reconnected by itself after sleeping
+  - type: dropdown
+    id: result
+    attributes:
+      label: Result
+      options:
+        - It worked
+        - It worked after a retry
+        - It did not work
+    validations:
+      required: true
+  - type: textarea
+    id: saw
+    attributes:
+      label: What you saw
+      description: How the code was shown (a 6-digit code, or no code at all), and anything surprising. If it failed, the last lines keybond printed.
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Log (optional, very helpful)
+      description: |
+        Run with `--log pairing.log` and paste the file. It contains your keyboard's address; replace it with AA:BB:CC:DD:EE:FF if you prefer. Other nearby devices are not recorded.
+      render: text

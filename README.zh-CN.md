@@ -145,6 +145,35 @@ sudo apt install python3-dbus python3-gi
 
 不需要 root 权限。keybond 只有一个文件。
 
+## 已验证的组合
+
+keybond 还很新，而蓝牙键盘各不相同。下表是目前在真实硬件上试过的全部组合。表里没有的，就是还没测过。
+
+| 键盘 | 蓝牙类型 | 配对码 | 配对 | 自动重连 | `fix` | 系统 | keybond |
+|---|---|---|:-:|:-:|:-:|---|---|
+| Filco Majestouch Convertible 2 | 经典蓝牙 | PIN | ✓ | ✓ | – | Ubuntu 24.04、GNOME、BlueZ 5.72 | 0.3.0 |
+| Filco Majestouch Convertible 2 TKL | 经典蓝牙 | PIN | – | – | ✓ 判断为“未应答” | Ubuntu 24.04、GNOME、BlueZ 5.72 | 0.4.0 |
+
+✓ 成功 · ✗ 失败 · – 未尝试
+
+**最需要的报告：**
+
+- 低功耗蓝牙（BLE）键盘：罗技、Keychron、微软、苹果近年的多数型号
+  （[#1](https://github.com/jiahongsigma/keybond/issues/1)）；
+- 用 6 位配对码配对、或完全不需要配对码的键盘；
+- Fedora、Debian、Arch，以及 KDE 桌面；
+- 一把“忘了配对”的键盘，用来验证 `keybond fix`
+  （[#2](https://github.com/jiahongsigma/keybond/issues/2)）。
+
+### 报告你的组合
+
+非常欢迎提交报告，失败的报告和成功的一样有用。只要两分钟：
+
+1. 带日志运行 keybond：`keybond --log pairing.log`
+2. [提交一份设备报告](https://github.com/jiahongsigma/keybond/issues/new?template=device-report.yml)，填写简短的表单（表单是英文的，用中文填写也可以）。
+
+你的组合随后会被加进上面的表格。
+
 ---
 
 以下是参考内容，点击标题展开。
@@ -263,9 +292,8 @@ sudo btmon -w pairing.btsnoop
 <details>
 <summary><b>现状与测试</b></summary>
 
-还很早期。在真实硬件上（Ubuntu 24.04、BlueZ 5.72）验证过的有：用老式 PIN 码配对一把 Filco Majestouch
-Convertible 2；对一把不在附近的已配对键盘运行 `fix`。其余都只在模拟的蓝牙服务上测试过：较新的 passkey 配对
-方式、低功耗蓝牙（BLE）键盘，以及其他失败情形。欢迎提供其他键盘和发行版上的使用反馈。
+还很早期。在真实硬件上跑过的组合都列在上面的“已验证的组合”里。其余都只在模拟的蓝牙服务上测试过：较新的
+passkey 配对方式、低功耗蓝牙（BLE）键盘，以及大部分失败情形。
 
 ```
 python3 -m unittest discover -s tests

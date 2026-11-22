@@ -145,6 +145,36 @@ mode, and tells you to pair it again. `fix` never removes a pairing by itself.
 
 No root needed. keybond is a single file.
 
+## Verified combinations
+
+keybond is young, and Bluetooth keyboards differ. This is everything that has been tried
+on real hardware so far. If your combination is not here, it has not been tested.
+
+| keyboard | Bluetooth | code | pairs | reconnects by itself | `fix` | system | keybond |
+|---|---|---|:-:|:-:|:-:|---|---|
+| Filco Majestouch Convertible 2 | classic | PIN | ✓ | ✓ | – | Ubuntu 24.04, GNOME, BlueZ 5.72 | 0.3.0 |
+| Filco Majestouch Convertible 2 TKL | classic | PIN | – | – | ✓ not answering | Ubuntu 24.04, GNOME, BlueZ 5.72 | 0.4.0 |
+
+✓ worked · ✗ failed · – not tried
+
+**Wanted most:**
+
+- a Bluetooth Low Energy keyboard: most recent Logitech, Keychron, Microsoft and Apple
+  models ([#1](https://github.com/jiahongsigma/keybond/issues/1));
+- a keyboard that pairs with a 6-digit passkey, or with no code at all;
+- Fedora, Debian, Arch, and a KDE desktop;
+- a keyboard that has forgotten its pairing, for `keybond fix`
+  ([#2](https://github.com/jiahongsigma/keybond/issues/2)).
+
+### Report yours
+
+Reports are very welcome, and a failure is as useful as a success. It takes two minutes:
+
+1. Run keybond with a log: `keybond --log pairing.log`
+2. [Open a device report](https://github.com/jiahongsigma/keybond/issues/new?template=device-report.yml) and fill in the short form.
+
+Your combination is then added to the table above.
+
 ---
 
 The rest is reference. Click a heading to open it.
@@ -272,11 +302,9 @@ sudo btmon -w pairing.btsnoop
 <details>
 <summary><b>Status and tests</b></summary>
 
-Early. On real hardware (Ubuntu 24.04, BlueZ 5.72): pairing a Filco Majestouch
-Convertible 2 with old-style PIN pairing, and `fix` against a paired keyboard that was out
-of range. Everything else is tested only against a stand-in Bluetooth service: the newer
-passkey method, Bluetooth Low Energy keyboards, and the other failure paths. Reports from
-other keyboards and distributions are welcome.
+Early. What has run on real hardware is listed under "Verified combinations" above.
+Everything else is tested only against a stand-in Bluetooth service: the newer passkey
+method, Bluetooth Low Energy keyboards, and most of the failure paths.
 
 ```
 python3 -m unittest discover -s tests
