@@ -7,6 +7,7 @@
 
 <p align="center">
   <a href="https://github.com/jiahongsigma/keybond/actions/workflows/tests.yml"><img alt="tests" src="https://github.com/jiahongsigma/keybond/actions/workflows/tests.yml/badge.svg"></a>
+  <a href="https://pypi.org/project/keybond/"><img alt="PyPI" src="https://img.shields.io/pypi/v/keybond.svg"></a>
   <a href="https://github.com/jiahongsigma/keybond/blob/main/LICENSE"><img alt="license: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
   <img alt="python 3" src="https://img.shields.io/badge/python-3-blue.svg">
   <img alt="platform: Linux" src="https://img.shields.io/badge/platform-Linux-lightgrey.svg">
@@ -23,12 +24,19 @@
 ## 快速开始
 
 ```
+pipx install --system-site-packages keybond
+keybond
+```
+
+或者什么都不装，克隆后直接运行：
+
+```
 git clone https://github.com/jiahongsigma/keybond.git
 cd keybond
 ./keybond.py
 ```
 
-然后：
+两种方式接下来都一样：
 
 1. 让键盘进入配对模式（按住配对键或组合键，直到指示灯闪烁）。
 2. 把 keybond 显示的数字敲在**新键盘上**，再按新键盘上的 `Enter`。
@@ -135,7 +143,7 @@ sudo apt install python3-dbus python3-gi
 - Python 3。Ubuntu 桌面版已经带齐了其余依赖。
 - 另一把能用的键盘，用来敲命令：笔记本自带的键盘，或一把 USB 键盘。
 
-不需要 root 权限，也不用安装：keybond 只有一个文件。
+不需要 root 权限。keybond 只有一个文件。
 
 ---
 
@@ -164,13 +172,14 @@ sudo apt install python3-dbus python3-gi
 <details>
 <summary><b>安装成命令</b></summary>
 
-克隆后直接运行 `./keybond.py` 不需要安装。如果想在任何目录下都能用 `keybond` 命令，可以用
-[pipx](https://pipx.pypa.io) 安装克隆下来的目录：
+keybond 已发布在 [PyPI](https://pypi.org/project/keybond/) 上。用 [pipx](https://pipx.pypa.io)
+安装（Debian 或 Ubuntu 上先 `sudo apt install pipx`）：
 
 ```
-pipx install --system-site-packages .
-keybond
+pipx install --system-site-packages keybond
 ```
+
+装好后，本页所有写 `./keybond.py` 的地方都可以直接用 `keybond` 命令。
 
 `--system-site-packages` 很重要：它让 keybond 能用到发行版自带的 D-Bus 绑定（`python3-dbus`、
 `python3-gi`）。keybond 不通过 pip 拉取它们，因为 pip 得从源码编译。

@@ -7,6 +7,7 @@
 
 <p align="center">
   <a href="https://github.com/jiahongsigma/keybond/actions/workflows/tests.yml"><img alt="tests" src="https://github.com/jiahongsigma/keybond/actions/workflows/tests.yml/badge.svg"></a>
+  <a href="https://pypi.org/project/keybond/"><img alt="PyPI" src="https://img.shields.io/pypi/v/keybond.svg"></a>
   <a href="https://github.com/jiahongsigma/keybond/blob/main/LICENSE"><img alt="license: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
   <img alt="python 3" src="https://img.shields.io/badge/python-3-blue.svg">
   <img alt="platform: Linux" src="https://img.shields.io/badge/platform-Linux-lightgrey.svg">
@@ -25,12 +26,19 @@ there until you have typed it.
 ## Quick start
 
 ```
+pipx install --system-site-packages keybond
+keybond
+```
+
+Or, with nothing to install, run it straight from a clone:
+
+```
 git clone https://github.com/jiahongsigma/keybond.git
 cd keybond
 ./keybond.py
 ```
 
-Then:
+Either way, then:
 
 1. Put the keyboard in pairing mode (hold its pairing button or key combination until a
    light blinks).
@@ -135,7 +143,7 @@ mode, and tells you to pair it again. `fix` never removes a pairing by itself.
 - Python 3. Ubuntu desktop already has everything else.
 - Another keyboard to type the commands with: a laptop's built-in one, or a USB one.
 
-No root, and nothing to install: keybond is a single file.
+No root needed. keybond is a single file.
 
 ---
 
@@ -164,13 +172,14 @@ keybond gives up after five real failures, or when the time runs out.
 <details>
 <summary><b>Install it as a command</b></summary>
 
-Running `./keybond.py` from a clone needs no installation. To have a `keybond` command
-available everywhere, install the clone with [pipx](https://pipx.pypa.io):
+keybond is on [PyPI](https://pypi.org/project/keybond/). Install it with
+[pipx](https://pipx.pypa.io) (`sudo apt install pipx` on Debian or Ubuntu):
 
 ```
-pipx install --system-site-packages .
-keybond
+pipx install --system-site-packages keybond
 ```
+
+From then on the command is `keybond` wherever this page writes `./keybond.py`.
 
 `--system-site-packages` matters: it lets keybond see the D-Bus bindings that your
 distribution provides (`python3-dbus`, `python3-gi`). keybond does not pull them in
