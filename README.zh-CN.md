@@ -1,3 +1,10 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/jiahongsigma/keybond/main/assets/keybond-mark-dark.svg">
+    <img src="https://raw.githubusercontent.com/jiahongsigma/keybond/main/assets/keybond-mark.svg" width="72" height="72" alt="Keybond: a keycap carrying the Bluetooth rune">
+  </picture>
+</p>
+
 <h1 align="center">Keybond</h1>
 
 <p align="center">
